@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "@types/node": "^20.14.11",
-    "axios": "^1.7.2",
-    "cors": "^2.8.5",
-    "mongoose": "^8.5.1",
-    "mysql2": "^3.10.3"
-  }
-}
