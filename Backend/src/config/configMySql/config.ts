@@ -13,7 +13,7 @@ connection.on("error", (err) => {
   console.error("failed connection", err);
 });
 
-export const getMySqlConnection = async () => {
+export const MySqlConnection = async () => {
   try {
     console.log("Connection to MySQL");
     return await connection.promise();
