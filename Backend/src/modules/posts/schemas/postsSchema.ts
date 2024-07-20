@@ -1,6 +1,6 @@
 import z from "zod";
 
-const userSchema = z.object({
+const postSchema = z.object({
 userId: z.string({
     required_error: "user is missing",
     invalid_type_error: "user is not valid",
@@ -8,13 +8,16 @@ userId: z.string({
   content: z.string().url().optional(),
   media: z.enum(['photo','video']).optional(),
   caption: z.string(),
+  likes:z.number().optional(),
   createAt: z.date()
 });
 
+export type Post=z.infer<typeof postSchema>
+
 export function validateUser(input: object) {
-  return userSchema.safeParse(input);
+  return postSchema.safeParse(input);
 }
 
 export function validatePartialUser(input: object) {
-  return userSchema.partial().safeParse(input);
+  return postSchema.partial().safeParse(input);
 }

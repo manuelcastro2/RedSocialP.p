@@ -1,6 +1,6 @@
 import z from "zod";
 
-const friendsSchema = z.object({
+export const friendsSchema = z.object({
   userId: z.string({
     required_error: "user is missing",
     invalid_type_error: "user is not valid",
@@ -11,6 +11,8 @@ const friendsSchema = z.object({
   }),
   status: z.enum(['pending','accepted','rejected'])
 });
+
+export type Friend=z.infer<typeof friendsSchema>
 
 export function validateFriends(input: object) {
   return friendsSchema.safeParse(input);

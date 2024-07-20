@@ -1,17 +1,19 @@
 import z from "zod";
 
 const commentsSchema = z.object({
-  sederId: z.string({
+  postId: z.string({
     required_error: "user is missing",
     invalid_type_error: "user is not valid",
   }),
-  reciverId: z.string({
+  userId: z.string({
     required_error: "user is missing",
     invalid_type_error: "user is not valid",
   }),
   content: z.string(),
   sendAt: z.date(),
 });
+
+export type Comments=z.infer<typeof commentsSchema>
 
 export function validateComments(input: object) {
   return commentsSchema.safeParse(input);
