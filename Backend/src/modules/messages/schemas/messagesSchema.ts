@@ -1,11 +1,11 @@
 import z from "zod";
 
-const menssagesSchema = z.object({
+const messagesSchema = z.object({
   sederId: z.string({
     required_error: "user is missing",
     invalid_type_error: "user is not valid",
   }),
-  reciverId: z.string({
+  receiverId: z.string({
     required_error: "user is missing",
     invalid_type_error: "user is not valid",
   }),
@@ -13,10 +13,11 @@ const menssagesSchema = z.object({
   sendAt: z.date(),
 });
 
-export function validateMenssages(input: object) {
-  return menssagesSchema.safeParse(input);
+export function validateMessages(input: object) {
+  return messagesSchema.safeParse(input);
 }
 
-export function validatePartialMenssages(input: object) {
-  return menssagesSchema.partial().safeParse(input);
+export function validatePartialMessages(input: object) {
+  return messagesSchema.partial().safeParse(input);
 }
+

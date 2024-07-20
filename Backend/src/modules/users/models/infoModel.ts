@@ -1,15 +1,26 @@
-import z from "zod";
+import { Document, Schema } from "mongoose";
+import mongooseConnection from "../../../config/configMongoDB/config.js";
 
-const infoSchema = z.object({
-  birthPlace: z.string(),
-  academic_training: z.string(),
-  contact: z.string(),
-  infoBasic: z.object({
-    sex: z.string(),
-    birthDate: z.date(),
-  }),
+interface Iinfo extends Document {
+  userId:string,
+  birthPlace: string,
+  academic_training: string,
+  contact: string,
+  infoBasic: {
+    sex: string,
+    birthDate: Date,  
+  }
+}
+
+const infoSchema: Schema = new Schema({
+  senderId: { type: String },
+  receiverId: { type: String, required: true },
+  content: { type: String, required: true },
+  sendAt: { type: Date, required: true}
 });
 
-export function validatePartialInfo(input: object) {
-  return infoSchema.partial().safeParse(input);
-}
+const Info = mongooseConnection.model<Iinfo>('Info', infoSchema
+
+)
+
+export default Info;

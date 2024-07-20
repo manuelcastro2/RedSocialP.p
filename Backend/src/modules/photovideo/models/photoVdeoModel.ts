@@ -1,22 +1,19 @@
-import z from "zod";
+import { Document, Schema } from "mongoose";
+import mongooseConnection from "../../../config/configMongoDB/config.js";
 
-const photovideoSchema = z.object({
-  postsId: z.string({
-    required_error: "user is missing",
-    invalid_type_error: "user is not valid",
-  }),
-  userId: z.string(),
-  url: z.string().url({
-    message: "the url of the image is invalid",
-  }),
+interface Iphotovideo extends Document {
+  postsId: string;
+  userId: string;
+  url: string;
+}
+
+const photoShema: Schema = new Schema({
+  postId: { type: String },
+  userId: { type: String, required: true },
+  url: { type: String, required: true },
 });
 
-export function validatePhotovideo(input: object) {
-  return photovideoSchema.safeParse(input);
-}
+const Photo = mongooseConnection.model<Iphotovideo>('PhotoVideo', photoShema)
 
-export function validatePartialPhotovideo(input: object) {
-  return photovideoSchema.partial().safeParse(input);
-}
-
+export default Photo;
 
