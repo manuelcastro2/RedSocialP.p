@@ -1,23 +1,17 @@
-import {
-  validatePartialPhotovideo,
-  validatePhotovideo,
-} from "../schemas/photoVideoSchema.js";
-import Photo from "../models/photoVdeoModel.js";
+import PhotoModel from "../models/photoVideoModel.js";
+import { PhotoVideo } from "../schemas/photoVideoSchema.js";
 
 export class PhotoVideoService {
-  static async getAll(userId: string) {
-    const photoUserValidate = validatePartialPhotovideo({ userId: userId });
-    return await Photo.find({ userId: photoUserValidate.data.userId });
+  async getAll(userId: string) {
+    return PhotoModel.find({ userId: userId });
   }
 
-  static async create(Input: object) {
-    const photoValidate = validatePhotovideo(Input);
-    const photo = new Photo(photoValidate.data);
-    return await photo.save();
+  async create(Input: PhotoVideo) {
+    const photo = new PhotoModel(Input);
+    return photo.save();
   }
 
-  static async delete(id: string) {
-    const photo = await Photo.deleteOne({ _id: id });
-    return photo;
+  async delete(id:string) {
+    return PhotoModel.findByIdAndDelete(id);
   }
 }

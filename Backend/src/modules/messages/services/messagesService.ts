@@ -1,29 +1,20 @@
-import {
-  validateMessages,
-  validatePartialMessages,
-} from "../schemas/messagesSchema.js";
-import Messages from "../models/messagesModel.js";
+import MessagesModel from "../models/messagesModel.js";
+import { Messages } from "../schemas/messagesSchema.js";
 
 export class MessagesService {
-  static async getAll(senderId: string, receiverId: string) {
-    const messagesSendValidate = validatePartialMessages({
+  async getAll(senderId: string, receiverId: string) {
+    return MessagesModel.find({
       senderId: senderId,
       receiverId: receiverId,
     });
-    return await Messages.find({
-      senderId: messagesSendValidate.data.sederId,
-      receiverId: messagesSendValidate.data.receiverId,
-    });
   }
 
-  static async create(Input: object) {
-    const messagesValidate = validateMessages(Input);
-    const messages = new Messages(messagesValidate.data);
-    return await messages.save();
+  async create(Input: Messages) {
+    const messages = new MessagesModel(Input);
+    return messages.save();
   }
 
-  static async delete(id: string) {
-    const messages = await Messages.deleteOne({ _id: id });
-    return messages;
+  async delete(id: string) {
+    return MessagesModel.findOneAndDelete({ _id: id });
   }
 }

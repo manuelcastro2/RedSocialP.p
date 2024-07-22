@@ -1,15 +1,17 @@
-import Info from "../models/infoModel.js";
-import { validatePartialInfo } from "../schemas/infoSchema.js";
+import { Info } from "../schemas/infoSchema.js";
+import InfoModel from "../models/infoModel.js";
 
 export class InfoService {
-  static async getAll(userId: string) {
-    const infoValidate = validatePartialInfo({ userId: userId });
-    return await Info.find({ userId: infoValidate.data.userId });
+  async getAll(userId: string) {
+    return InfoModel.find({ userId: userId });
   }
 
-  static async Update(Input: object) {
-    const infoValidate = validatePartialInfo(Input);
-    return await Info.updateOne({userId:infoValidate.data.userId});
+  async addInfo(Input: Info) {
+    const info = new InfoModel(Input);
+    return info.save();
   }
 
+  async Update(Input: Info) {
+    return InfoModel.findOneAndUpdate({ userId: Input.userId }, Input);
+  }
 }

@@ -6,6 +6,7 @@ export const userSchema = z.object({
     invalid_type_error: "user is not valid",
   }).min(5),
   nameUser:z.string(),
+  photoUser:z.string(),
   email: z.string().email(),
   password: z.string().min(8),
   createAt: z.date()

@@ -14,10 +14,10 @@ userId: z.string({
 
 export type Post=z.infer<typeof postSchema>
 
-export function validateUser(input: object) {
+export function validatePosts(input: object) {
   return postSchema.safeParse(input);
 }
 
-export function validatePartialUser(input: object) {
+export function validatePartialPosts(input: object) {
   return postSchema.partial().safeParse(input);
 }

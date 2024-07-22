@@ -1,6 +1,6 @@
 import z from "zod";
 
-const photovideoShema = z.object({
+const photoVideoSchema = z.object({
   postsId: z.string({
     required_error: "user is missing",
     invalid_type_error: "user is not valid",
@@ -11,10 +11,12 @@ const photovideoShema = z.object({
   }),
 });
 
-export function validatePhotovideo(input: object) {
-  return photovideoShema.safeParse(input);
+export type PhotoVideo=z.infer<typeof photoVideoSchema>
+
+export function validatePhotoVideo(input: object) {
+  return photoVideoSchema.safeParse(input);
 }
 
-export function validatePartialPhotovideo(input: object) {
-  return photovideoShema.partial().safeParse(input);
+export function validatePartialPhotoVideo(input: object) {
+  return photoVideoSchema.partial().safeParse(input);
 }

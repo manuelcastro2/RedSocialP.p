@@ -13,6 +13,8 @@ const messagesSchema = z.object({
   sendAt: z.date(),
 });
 
+export type Messages=z.infer<typeof messagesSchema>
+
 export function validateMessages(input: object) {
   return messagesSchema.safeParse(input);
 }

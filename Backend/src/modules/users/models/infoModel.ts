@@ -19,8 +19,8 @@ const infoSchema: Schema = new Schema({
   sendAt: { type: Date, required: true}
 });
 
-const Info = mongooseConnection.model<Iinfo>('Info', infoSchema
+const InfoModel = mongooseConnection.model<Iinfo>('Info', infoSchema
 
 )
 
-export default Info;
+export default InfoModel;

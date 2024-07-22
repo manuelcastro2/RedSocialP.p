@@ -11,6 +11,8 @@ const infoSchema = z.object({
   }),
 });
 
+export type Info=z.infer<typeof infoSchema>
+
 export function validatePartialInfo(input: object) {
   return infoSchema.partial().safeParse(input);
 }

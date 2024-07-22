@@ -15,6 +15,6 @@ const messagesSchema: Schema = new Schema({
   sendAt: { type: Date, required: true}
 });
 
-const Messages = mongooseConnection.model<Imessages>('messages', messagesSchema)
+const MessagesModel = mongooseConnection.model<Imessages>('messages', messagesSchema)
 
-export default Messages;
+export default MessagesModel;
