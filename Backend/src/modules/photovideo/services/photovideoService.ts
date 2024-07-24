@@ -7,7 +7,15 @@ export class PhotoVideoService {
   }
 
   async create(Input: PhotoVideo) {
-    const photo = new PhotoModel(Input);
+    const At = new Date();
+    const photoVideo={
+      postsId:Input.postsId,
+      userId:Input.userId,
+      url:Input.url,
+      createAt:At
+    }
+
+    const photo = new PhotoModel(photoVideo);
     return photo.save();
   }
 

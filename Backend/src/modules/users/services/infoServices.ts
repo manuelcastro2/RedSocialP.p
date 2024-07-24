@@ -2,7 +2,7 @@ import { Info } from "../schemas/infoSchema.js";
 import InfoModel from "../models/infoModel.js";
 
 export class InfoService {
-  async getAll(userId: string) {
+  async getByUser(userId: string) {
     return InfoModel.find({ userId: userId });
   }
 

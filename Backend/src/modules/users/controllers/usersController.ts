@@ -1,6 +1,8 @@
 import { UserService } from "../services/userService.js";
+import { MulterFile, upload } from "../models/userModel.js";
 import { validatePartialUser, validateUser } from "../schemas/userSchema.js";
 import { Response, Request } from "express";
+import { isString } from "util";
 
 export class UserController {
   private userService: UserService;
@@ -31,10 +33,24 @@ export class UserController {
       .catch((err) => res.status(404).json({ error: err }));
   };
 
-  delete = async (req: Request, res: Response) => {
-    const user = this.userService.delete(req.params.id);
+  updatePhoto = async (req: Request, res: Response) => {
+    const photo = req.file?.path;
+    const id: string = req.params.id;
 
-    user
+    if (isString(id)) return null;
+
+    const user = this.userService.updatePhoto(photo, req.params.id);
+
+    await user
+      .then((data) => res.status(204).json({ users: data }))
+      .catch((err) => res.status(404).json({ error: err }));
+  };
+
+  delete = async (req: Request, res: Response) => {
+    const id: string = req.params.id;
+    const user = this.userService.delete(id);
+
+    await user
       .then((data) => res.status(204).json({ users: data }))
       .catch((err) => res.status(404).json({ error: err }));
   };

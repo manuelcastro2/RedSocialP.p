@@ -8,8 +8,7 @@ userId: z.string({
   content: z.string().url().optional(),
   media: z.enum(['photo','video']).optional(),
   caption: z.string(),
-  likes:z.number().optional(),
-  createAt: z.date()
+  likes:z.number().optional().default(0)
 });
 
 export type Post=z.infer<typeof postSchema>

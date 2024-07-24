@@ -10,7 +10,6 @@ const commentsSchema = z.object({
     invalid_type_error: "user is not valid",
   }),
   content: z.string(),
-  sendAt: z.date(),
 });
 
 export type Comments=z.infer<typeof commentsSchema>

@@ -12,22 +12,24 @@ export class CommentsController {
     const validate = validateComments(req.body);
     const comment = this.commentsService.addComments(validate.data);
 
-    comment
+    await comment
       .then((data) => res.status(200).json({ comment: data }))
       .catch((err) => res.status(400).json({ error: err }));
   };
+
   getAll = async (req: Request, res: Response) => {
     const validate = validatePartialComments({ postId: req.params.postId });
     const comments = this.commentsService.getAll(validate.data.postId);
 
-    comments
+    await comments
       .then((data) => res.status(200).json({ comments: data }))
       .catch((err) => res.status(400).json({ error: err }));
   };
+  
   deleteComment = async (req: Request, res: Response) => {
     const comments = this.commentsService.deleteComments(req.params.id);
 
-    comments
+    await comments
       .then((data) => res.status(200).json({ comments: data }))
       .catch((err) => res.status(400).json({ error: err }));
   };

@@ -1,20 +1,21 @@
 import { pool } from "./../../../config/configMySql/config.js";
 import { Comments } from "../schemas/commentsSchema.js";
+import { v4 as uuidv4 } from "uuid";
 
 export class CommentsService {
   async addComments(comments: Comments) {
-    const [uuidR] = await pool.query[Symbol.iterator]("SELECT UUID() uuid;");
-    const [{ uuid }] = uuidR;
+    const uuidR = uuidv4();
+    const At = new Date();
 
     const [commentInsert] = await pool.query[Symbol.iterator](
       `INSERT INTO comments (id,postId, userId,content,sendAt) 
-      VALUES (UUID_TO_BIN(?),UUID_TO_BIN(?),UUID_TO_BIN(?),?,?)`,
+      VALUES (?,?,?,?,?)`,
       [
-        uuid,
+        uuidR,
         comments.postId,
         comments.userId,
         comments.content,
-        comments.sendAt,
+        At,
       ]
     );
     return commentInsert;

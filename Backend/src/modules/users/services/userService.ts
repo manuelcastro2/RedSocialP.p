@@ -1,6 +1,6 @@
-import { User } from "./../schemas/userSchema.js";
+import { User } from "../schemas/userSchema.js";
 import { pool } from "../../../config/configMySql/config.js";
-
+import { v4 as uuidv4 } from "uuid";
 export class UserService {
   async getProfile(id: string) {
     try {
@@ -14,14 +14,27 @@ export class UserService {
     }
   }
 
-   async create(user: User) {
-    const [uuidR] = await pool.query[Symbol.iterator]("SELECT UUID() uuid;");
-    const [{ uuid }] = uuidR;
+  async create(user: User) {
+    const uuidR = uuidv4();
     const At = new Date();
     try {
+      const [userExists] = await pool.query[Symbol.iterator](
+        "SELECT name, nameUser, photoUser, email, password, id FROM users WHERE email=?;",
+        user.email
+      );
+
+      if (userExists) throw new Error("user already exists");
+
       const [userInsert] = pool.query[Symbol.iterator](
-        `INSERT INTO users (id, name, nameUser,photoUser, email,password,createAt) VALUES (UUID_TO_BIN(UUID(${uuid})),?,?,?,?, ?, ?)`,
-        [user.name, user.nameUser,user.photoUser, user.email, user.password, At]
+        `INSERT INTO users (id, name, nameUser,photoUser, email,password,createAt) VALUES (${uuidR},?,?,?,?, ?, ?)`,
+        [
+          user.name,
+          user.nameUser,
+          user.photoUser,
+          user.email,
+          user.password,
+          At,
+        ]
       );
       return userInsert;
     } catch (err) {
@@ -29,7 +42,7 @@ export class UserService {
     }
   }
 
-   async update(user: User, id: string) {
+  async update(user: User, id: string) {
     const setString = Object.keys(user)
       .map((key) => `${key} = ?`)
       .join(", ");
@@ -41,10 +54,18 @@ export class UserService {
     return userUpdate;
   }
 
-   async delete(id: string) {
+  async updatePhoto(file: string, id: string) {
+    const [userUpdate] = await pool.query[Symbol.iterator](
+      `UPDATE users SET photoUser=? WHERE id = ?`,
+      [file, id]
+    );
+    return userUpdate;
+  }
+
+  async delete(id: string) {
     try {
       const [userDelete] = await pool.execute[Symbol.iterator](
-        "DELETE FROM users WHERE id=UUID_TO_BIN(?)",
+        "DELETE FROM users WHERE id=?",
         [id]
       );
       return userDelete;
