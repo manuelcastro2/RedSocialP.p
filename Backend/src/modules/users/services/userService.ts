@@ -48,7 +48,7 @@ export class UserService {
       .join(", ");
     const values = Object.values(user);
     const [userUpdate] = await pool.query[Symbol.iterator](
-      `UPDATE users SET ${setString} WHERE id = UUID_TO_BIN(?)`,
+      `UPDATE users SET ${setString} WHERE id = ?`,
       [...values, id]
     );
     return userUpdate;

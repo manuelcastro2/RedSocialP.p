@@ -23,8 +23,8 @@ export class CommentsService {
 
   async getAll(postId: string) {
     const [comments] = await pool.query[Symbol.iterator](
-      `SELECT BIN_TO_UUID(id) id,BIN_TO_UUID(postId) postId,content,sendAt,nameUser,name, BIN_TO_UUID(userId) userId 
-      FROM comments c JOIN posts p ON c.postId=p.id WHERE c.postId=UUID_TO_BIN(?)`,
+      `SELECT id,BIN_TO_UUID(postId) postId,content,sendAt,nameUser,name, userId 
+      FROM comments c JOIN posts p ON c.postId=p.id WHERE c.postId=?`,
       postId
     );
     return comments;
@@ -32,7 +32,7 @@ export class CommentsService {
 
   async deleteComments(id: string) {
     const [postsDelete] = await pool.query[Symbol.iterator](
-      "DELETE FROM comments WHERE id = UUID_TO_BIN(?)",
+      "DELETE FROM comments WHERE id = ?",
       id
     );
     return postsDelete;

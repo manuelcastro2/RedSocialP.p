@@ -6,7 +6,7 @@ export class PostsService {
 
   async getAll(userId: string) {
     const [posts] = await pool.query[Symbol.iterator](
-      "SELECT content,media, caption, createAt,BIN_TO_UUID(userId) userId, BIN_TO_UUID(id) id FROM posts where id =UUID_TO_BIN(?)",
+      "SELECT content,media, caption, createAt,BIN_TO_UUID(userId) userId, id FROM posts where id =?",
       userId
     );
     return posts;
@@ -14,7 +14,7 @@ export class PostsService {
   
   async getById(id: string) {
     const [posts] = await pool.query[Symbol.iterator](
-      "SELECT content,media, caption, createAt,likes,BIN_TO_UUID(id) id FROM posts WHERE id=UUID_TO_BIN(?);",
+      "SELECT content,media, caption, createAt,likes, id FROM posts WHERE id=?;",
       id
     );
     return posts;
@@ -42,7 +42,7 @@ export class PostsService {
 
   async removePost(id: string) {
     const [postsDelete] = await pool.query[Symbol.iterator](
-      "DELETE FROM posts WHERE id = UUID_TO_BIN(?)",
+      "DELETE FROM posts WHERE id = ?)",
       id
     );
     return postsDelete;

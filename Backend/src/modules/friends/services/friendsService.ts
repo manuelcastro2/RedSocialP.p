@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from "uuid";
 export class FriendsService {
   async getFriendsByUserId(userId: string) {
     const [friends] = await pool.query[Symbol.iterator](
-      `SELECT BIN_TO_UUID(f.friendId) AS friendId, u.name, u.nameUser, u.email
+      `SELECT f.friendId AS friendId, u.name, u.nameUser, u.email
     FROM friends f
     JOIN users u ON f.friendId = u.id
-    WHERE f.userId = UUID_TO_BIN(?)
+    WHERE f.userId = ?
   `,
       [userId]
     );
@@ -29,7 +29,7 @@ export class FriendsService {
 
   async removeFriend(userId: string, friendId: string) {
     const [friends] = await pool.query[Symbol.iterator](
-      "DELETE FROM friends WHERE userId = UUID_TO_BIN(?) AND friendId = UUID_TO_BIN(?)",
+      "DELETE FROM friends WHERE userId = ? AND friendId = ?",
       [userId, friendId]
     );
     return friends;

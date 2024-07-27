@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { PostsController } from "../controllers/postsController.js";
 
-export const createInfoRouter = ()=>{
+export const createPostRouter = ()=>{
     const postsRouter= Router()
     
     const postsController= new PostsController()

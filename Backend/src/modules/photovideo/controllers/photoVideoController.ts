@@ -4,6 +4,7 @@ import {
   validatePhotoVideo,
 } from "../schemas/photoVideoSchema.js";
 import { Request, Response } from "express";
+import { uploadFileToB2 } from "../services/fileServces.js";
 
 export class PhotoVideoController {
   private photoVideoService: PhotoVideoService;
@@ -18,8 +19,18 @@ export class PhotoVideoController {
   };
 
   create = async (req: Request, res: Response) => {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).send("No file uploaded");
+    }
+      const fileUrl = await uploadFileToB2(file);
+
     const validatePV = validatePhotoVideo(req.body);
-    const photoVideo = this.photoVideoService.create(validatePV.data);
+    const photoVideo = this.photoVideoService.create({
+      postsId: validatePV.data.postsId,
+      url: fileUrl,
+      userId: validatePV.data.userId,
+    });
 
     await photoVideo
       .then((data) => res.status(201).json({ photoVideo: data }))
