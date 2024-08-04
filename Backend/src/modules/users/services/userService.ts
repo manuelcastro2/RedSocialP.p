@@ -1,14 +1,16 @@
 import { User } from "../schemas/userSchema.js";
-import { pool } from "../../../config/configMySql/config.js";
+import pool from "../../../config/configMySql/config.js";
 import { v4 as uuidv4 } from "uuid";
+import { OkPacket } from "mysql2";
+
 export class UserService {
   async getProfile(id: string) {
     try {
-      const [user] = await pool.query[Symbol.iterator](
-        "SELECT name,nameUser,photoUser, BIN_TO_UUID(id) id FROM users WHERE id=UUID_TO_BIN(?);",
+      const [user] = await pool.query(
+        "SELECT name,nameUser,photoUser, id FROM users WHERE id=?;",
         id
       );
-      return user;
+      return user[0];
     } catch (err) {
       throw new Error("Error select user");
     }
@@ -18,16 +20,23 @@ export class UserService {
     const uuidR = uuidv4();
     const At = new Date();
     try {
-      const [userExists] = await pool.query[Symbol.iterator](
-        "SELECT name, nameUser, photoUser, email, password, id FROM users WHERE email=?;",
-        user.email
+      const [userExist] = await pool.query(
+        "SELECT COUNT(*) AS count FROM users WHERE email=? and nameUser=?;",
+        [user.email, user.nameUser]
       );
 
-      if (userExists) throw new Error("user already exists");
+     console.log(userExist[0].count);
+     
+      
 
-      const [userInsert] = pool.query[Symbol.iterator](
-        `INSERT INTO users (id, name, nameUser,photoUser, email,password,createAt) VALUES (${uuidR},?,?,?,?, ?, ?)`,
+      if (userExist[0].count>0) {
+        throw new Error("User already exists");
+      }
+
+      await pool.query(
+        `INSERT INTO users (id, name, nameUser,photoUser, email,password,createAt) VALUES (?,?,?,?,?, ?, ?)`,
         [
+          uuidR,
           user.name,
           user.nameUser,
           user.photoUser,
@@ -36,9 +45,13 @@ export class UserService {
           At,
         ]
       );
-      return userInsert;
+      const [userR] = await pool.query(
+        "SELECT name,nameUser,photoUser,email,password,createAt,id id FROM users WHERE id=?;",
+        uuidR
+      );
+      return userR[0];
     } catch (err) {
-      throw new Error("Error creating user");
+      throw new Error(err);
     }
   }
 
@@ -47,28 +60,32 @@ export class UserService {
       .map((key) => `${key} = ?`)
       .join(", ");
     const values = Object.values(user);
-    const [userUpdate] = await pool.query[Symbol.iterator](
-      `UPDATE users SET ${setString} WHERE id = ?`,
-      [...values, id]
+    await pool.query(`UPDATE users SET ${setString} WHERE id = ?`, [
+      ...values,
+      id,
+    ]);
+    const [userR] = await pool.query(
+      "SELECT name,nameUser,photoUser, id id FROM users WHERE id=?;",
+      [id]
     );
-    return userUpdate;
+    return userR[0];
   }
 
   async updatePhoto(file: string, id: string) {
-    const [userUpdate] = await pool.query[Symbol.iterator](
-      `UPDATE users SET photoUser=? WHERE id = ?`,
-      [file, id]
+    await pool.query(`UPDATE users SET photoUser=? WHERE id = ?`, [file, id]);
+    const [userR] = await pool.query(
+      "SELECT name,nameUser,photoUser, id FROM users WHERE id=?;",
+      [id]
     );
-    return userUpdate;
+    return userR[0];
   }
 
   async delete(id: string) {
     try {
-      const [userDelete] = await pool.execute[Symbol.iterator](
-        "DELETE FROM users WHERE id=?",
-        [id]
-      );
-      return userDelete;
+      const [userDelete] = await pool.query("DELETE FROM users WHERE id=?", [
+        id,
+      ]);
+      return userDelete[0];
     } catch (err) {
       throw new Error("Error deleting user");
     }

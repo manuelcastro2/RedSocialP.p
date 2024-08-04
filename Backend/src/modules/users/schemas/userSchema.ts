@@ -5,7 +5,7 @@ export const userSchema = z.object({
   nameUser: z.string({
       required_error: "user is missing",
       invalid_type_error: "user is not valid"
-    }).length(4),
+    }).min(4),
   photoUser: z.string(),
   email: z.string().email(),
   password: z.string().min(8),

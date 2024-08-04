@@ -6,7 +6,7 @@ import {
 import { Request, Response } from "express";
 
 export class MessagesController {
-  private messagesService: MessagesService;
+  private messagesService=new MessagesService();
 
   getAll = async (req: Request, res: Response) => {
     const validate = validatePartialMessages(req.body);
@@ -21,7 +21,7 @@ export class MessagesController {
   };
 
   create = async (req: Request, res: Response) => {
-    const validate = validateMessages(req.body);
+    const validate = validatePartialMessages(req.body);
     const messages = this.messagesService.create(validate.data);
 
     await messages

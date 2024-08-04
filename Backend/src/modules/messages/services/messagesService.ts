@@ -10,11 +10,17 @@ export class MessagesService {
   }
 
   async create(Input: Messages) {
-    const messages = new MessagesModel(Input);
+    const At = new Date();
+    const messages = new MessagesModel({
+      senderId: Input.sederId,
+      receiverId: Input.receiverId,
+      content: Input.content,
+      sendAt: At,
+    });
     return messages.save();
   }
 
   async delete(id: string) {
-    return MessagesModel.findOneAndDelete({ _id: id });
+    return MessagesModel.deleteOne({ _id: id });
   }
 }

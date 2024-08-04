@@ -6,7 +6,7 @@ import {
 import { Request, Response } from "express";
 
 export class CommentsController {
-  private commentsService: CommentsService;
+  private commentsService=new CommentsService();
 
   addComment = async (req: Request, res: Response) => {
     const validate = validateComments(req.body);

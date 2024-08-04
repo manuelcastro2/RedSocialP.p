@@ -3,10 +3,12 @@ import { validatePartialPosts, validatePosts } from "../schemas/postsSchema.js";
 import { Request, Response } from "express";
 
 export class PostsController {
-  private postsService: PostsService;
+  private postsService= new PostsService();
 
   getAll = async (req: Request, res: Response) => {
-    const validate = validatePartialPosts({ userId: req.params.userId });
+    const validate = validatePartialPosts(req.body);
+    console.log(validate.data.userId);
+    
     const post = this.postsService.getAll(validate.data.userId);
 
     await post
@@ -22,14 +24,6 @@ export class PostsController {
       .catch((err) => res.status(400).json({ error: err }));
   };
 
-  addPost = async (req: Request, res: Response) => {
-    const validate = validatePosts(req.body);
-    const post = this.postsService.addPost(validate.data);
-
-    await post
-      .then((data) => res.status(201).json({ posts: data }))
-      .catch((err) => res.status(400).json({ error: err }));
-  };
 
   RemovePost = async (req: Request, res: Response) => {
     const post = this.postsService.removePost(req.params.id);

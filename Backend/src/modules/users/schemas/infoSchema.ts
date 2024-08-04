@@ -1,18 +1,18 @@
 import z from "zod";
 
-const infoSchema = z.object({
-  userId:z.string(),
-  birthPlace: z.string(),
-  academic_training: z.string(),
-  contact: z.string(),
+export const infoSchema = z.object({
+  userId: z.string({required_error:"the user is required"}),
+  birthPlace: z.string().optional(),
+  academicStudies: z.string().optional(),
+  contact: z.string().optional(),
   infoBasic: z.object({
-    sex: z.string(),
-    birthDate: z.date(),  
-  }),
+    sex: z.string().optional(),
+    birthDate: z.coerce.date().optional(),
+  }).optional()
 });
 
-export type Info=z.infer<typeof infoSchema>
+export type Info = z.infer<typeof infoSchema>;
 
 export function validatePartialInfo(input: object) {
-  return infoSchema.partial().safeParse(input);
+  return infoSchema.safeParse(input);
 }

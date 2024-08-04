@@ -12,6 +12,11 @@ export class InfoService {
   }
 
   async Update(Input: Info) {
-    return InfoModel.findOneAndUpdate({ userId: Input.userId }, Input);
+    console.log(Input);
+    
+    const update=InfoModel.updateOne({ userId: Input.userId }, Input);
+    if((await update).modifiedCount>0){
+      return InfoModel.find({ userId: Input.userId})
+    }
   }
 }

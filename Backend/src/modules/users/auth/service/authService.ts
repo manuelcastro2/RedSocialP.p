@@ -1,10 +1,10 @@
-import { pool } from "../../../../config/configMySql/config.js";
+import pool from "../../../../config/configMySql/config.js";
 
 export class AuthService {
   async login(email: string, password: string) {
     try {
-      const [user] = await pool.query[Symbol.iterator](
-        "SELECT name, nameUser, photoUser, email, password, BIN_TO_UUID(id) id FROM users WHERE email=?,password=?;",
+      const [user] = await pool.query(
+        "SELECT name, nameUser, photoUser, email, password, id FROM users WHERE email=? and password=?;",
         [email, password]
       );
       return user;

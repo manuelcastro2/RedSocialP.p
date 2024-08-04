@@ -7,7 +7,6 @@ export const createPhotoVideoRouter = () => {
   const photoVideoController = new PhotoVideoController();
 
   photoVideoRouter.get("/", photoVideoController.getAll);
-  photoVideoRouter.post("/", photoVideoController.create);
   photoVideoRouter.delete("/:id", photoVideoController.delete);
 
   return photoVideoRouter;

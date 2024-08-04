@@ -6,7 +6,7 @@ export const createFriendsRouter = () => {
 
   const friendsController = new FriendsController();
 
-  friendsRouter.get("/", friendsController.getFriendsByUserId);
+  friendsRouter.get("/:userId", friendsController.getFriendsByUserId);
   friendsRouter.post("/", friendsController.addFriends);
   friendsRouter.delete("/", friendsController.removeFriends);
 
